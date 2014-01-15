@@ -1,0 +1,23 @@
+{
+	"name": "gajus/nexmore",
+	"description": "",
+	"version": "0.0.1",
+	"keywords": ["sms", "nexmo"],
+	"homepage": "https://github.com/gajus/nexmore",
+	"type": "library",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Gajus Kuizinas",
+			"email": "gk@anuary.com"
+		}
+	],
+	"require": {
+		"php": ">=5.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"gajus\\": "src/"
+		}
+	}
+}

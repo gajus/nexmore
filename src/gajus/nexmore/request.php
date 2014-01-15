@@ -1,38 +1,29 @@
 <?php
-namespace ay\nexmo;
+namespace gajus\nexmore;
 
-class Message {
+abstract class Request {
 	private
-		$url,
 		$key,
 		$secret;
 	
-	public function __construct ($url, $key, $secret) {
-		$this->url = $url;
+	public function __construct ($key, $secret) {
 		$this->key = $key;
 		$this->secret = $secret;
 	}
-	
-	public function send ($from, $to, $message) {
-		return $this->sendRequest(['from' => $from, 'to' => $to, 'text' => $message]);
-	}
-	
-	private function sendRequest (array $parameters) {
+
+	private function sendRequest ($url, array $parameters) {
 		$ch = curl_init();
-		
-		if (!isset($parameters['from'])) {
-			throw new \ErrorException('Originator name is required.');
-		}
 		
 		$parameters = ['api_key' => $this->key, 'api_secret' => $this->secret] + $parameters;
 
 		curl_setopt_array($ch, [
-			CURLOPT_URL => $this->url,
+			CURLOPT_URL => 'https://rest.nexmo.com/sms/json',
 			CURLOPT_TIMEOUT => 5,
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_SSL_VERIFYHOST => 2,
 			CURLOPT_SSL_VERIFYPEER => true,
 			CURLOPT_POST => true,
+			CURLOPT_USERAGENT => 'Nexmore-PHP/0.0.1',
 			CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
 			CURLOPT_POSTFIELDS => json_encode($parameters)
 		]);
