@@ -1,5 +1,5 @@
 <?php
-set_include_path(__DIR__ . '/../src');
+set_include_path(__DIR__ . '/../src' . PATH_SEPARATOR . __DIR__);
 
 spl_autoload_register();
 
@@ -30,8 +30,8 @@ $inbound_message_input_valid = [
 	'message-timestamp' => '2012-08-19 20:38:23'
 ];
 
-#$listener = new \gajus\nexmore\Listener($receipt_input_valid);
-#bump( $listener->getDeliveryReceipt() );
+$listener = new \gajus\nexmore\Listener($receipt_input_valid);
+var_export( $listener->getDeliveryReceipt() );
 
 #$listener = new \gajus\nexmore\Listener($inbound_message_input_valid);
 #bump( $listener->getInboundMessage() );

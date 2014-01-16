@@ -120,10 +120,12 @@ array(7) {
 
 ## Alternatives
 
-If you don't like Nexmore implementation, please raise an issue with your concerns & I will address them.
+If you don't like Nexmore implementation, please [raise an issue](https://github.com/gajus/Nexmore/issues).
 
-The following are known alternatives:
+The following are the known alternatives:
 
 * https://github.com/aatishnn/NexmoAlert
 * https://github.com/prawnsalad/Nexmo-PHP-lib
 * https://github.com/mousems/SimpleNexmoSender
+
+If you know more alternatives, please tell me and I will include them in the above list.

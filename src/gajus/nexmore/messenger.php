@@ -48,7 +48,7 @@ class Messenger {
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
-				throw new \gajus\nexmore\Error($m['error-text'], $m['status']);
+				throw new \gajus\nexmore\ErrorException($m['error-text'], $m['status']);
 			}
 		}
 
@@ -75,7 +75,13 @@ class Messenger {
 		// Should leave the validation for the API.
 		// if (isset($parameters['lg']) && !in_array($parameters['lg'], ['de-de']))
 
-		return $this->sendRequest('https://rest.nexmo.com/tts/json', ['to' => $to, 'text' => $text] + $parameters);
+		$response =  $this->sendRequest('https://rest.nexmo.com/tts/json', ['to' => $to, 'text' => $text] + $parameters);
+
+		if ($response['status'] !== '0') {
+			throw new \gajus\nexmore\ErrorException($response['error-text'], $response['status']);
+		}
+
+		return $response;
 	}
 
 	/**
