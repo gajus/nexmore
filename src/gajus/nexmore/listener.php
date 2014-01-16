@@ -9,10 +9,12 @@ class Listener {
 		 */
 		$input,
 		/**
-		 * @see https://help.nexmo.com/entries/23181071-Source-IP-subnet-for-incoming-traffic-in-REST-API
-		 * @param array
+		 * Whether to check IP of the input source.
+		 * Set to false if $input array is provided to the __construct.
+		 *
+		 * @param boolean
 		 */
-		$inbound_ips = ['174.36.197.193', '174.36.197.194', '174.36.197.195', '174.36.197.196', '174.36.197.197', '174.36.197.198', '174.36.197.199', '174.36.197.200', '174.36.197.201', '174.36.197.202', '174.36.197.203', '174.36.197.204', '174.36.197.205', '174.36.197.206', '119.81.44.1', '119.81.44.2', '119.81.44.3', '119.81.44.4', '119.81.44.5', '119.81.44.6', '119.81.44.7', '119.81.44.8', '119.81.44.9', '119.81.44.10', '119.81.44.11', '119.81.44.12', '119.81.44.13', '119.81.44.14'];
+		$restrict_source = true;
 
 	/**
 	 * Listens to Nexmo Delivery Receipt. All knonw receipt $_GET parameters are mapped to
@@ -22,14 +24,11 @@ class Listener {
 	 * @param string $secret
 	 * @param boolean $debug Debug allows indbound traffic to come from outside of the safe subnet.
 	 */
-	public function __construct (array $input = null, $firewall = true) {
-		#if ($firewall && !in_array($_SERVER['REMOTE_ADDR'], $this->inbound_ips)) {
-		#	throw new \Exception('Remote address not authorised to perform this operation.');
-		#}
-
+	public function __construct (array $input = null) {
 		if ($input === null) {
 			$this->input = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
 		} else {
+			$this->restrict_source = false;
 			$this->input = $input;
 		}
 	}
@@ -37,14 +36,14 @@ class Listener {
 	/**
 	 * "err-code" and "client-ref" are excluded from the catch condition because
 	 * "err-code" might be "0" and "client-ref" if an optional parameter.
-	 * 
-	 * Request examples: ?msisdn=66837000111&to=12150000025&network-code=52099&messageId=000000FFFB0356D2&price=0.02000000&status=delivered&scts=1208121359&err-code=0&message-timestamp=2012-08-12+13%3A59%3A37
 	 *
 	 * @see https://docs.nexmo.com/index.php/sms-api/handle-delivery-receipt
 	 * @return null|array
 	 */
-	private function getDeliveryReceipt () {
+	public function getDeliveryReceipt () {
 		if (isset($this->input['to'], $this->input['network-code'], $this->input['messageId'], $this->input['msisdn'], $this->input['status'], $this->input['price'], $this->input['scts'], $this->input['message-timestamp'])) {
+			$this->sourceIdentity();
+
 			return [
 				'sender_id' => $this->input['to'],
 				'recipient_number' => $this->input['msisdn'],
@@ -63,13 +62,13 @@ class Listener {
 	/**
 	 * "msisdn" and "network-code" are excluded from the catch condition because they are optional parameters.
 	 *
-	 * Request examples: ?msisdn=19150000001&to=12108054321&messageId=000000FFFB0356D1&text=This+is+an+inbound+message&type=text&message-timestamp=2012-08-19+20%3A38%3A23
-	 *
 	 * @see https://docs.nexmo.com/index.php/sms-api/handle-inbound-message
 	 * @return null|array
 	 */
-	private function getInboundMessage () {
+	public function getInboundMessage () {
 		if (isset($this->input['type'], $this->input['to'], $this->input['messageId'], $this->input['message-timestamp'])) {
+			$this->sourceIdentity();
+
 			$inbound_message = [
 				'type' => $this->input['type'],
 				'recipient_number' => $this->input['to'],
@@ -94,6 +93,21 @@ class Listener {
 			}
 
 			return $inbound_message;
+		}
+	}
+
+	/**
+	 * @see https://help.nexmo.com/entries/23181071-Source-IP-subnet-for-incoming-traffic-in-REST-API
+	 */
+	private function sourceIdentity () {
+		if (!$this->restrict_source) {
+			return;
+		}
+
+		$nexmo_server_ips = ['174.36.197.193', '174.36.197.194', '174.36.197.195', '174.36.197.196', '174.36.197.197', '174.36.197.198', '174.36.197.199', '174.36.197.200', '174.36.197.201', '174.36.197.202', '174.36.197.203', '174.36.197.204', '174.36.197.205', '174.36.197.206', '119.81.44.1', '119.81.44.2', '119.81.44.3', '119.81.44.4', '119.81.44.5', '119.81.44.6', '119.81.44.7', '119.81.44.8', '119.81.44.9', '119.81.44.10', '119.81.44.11', '119.81.44.12', '119.81.44.13', '119.81.44.14'];
+
+		if (!in_array($_SERVER['REMOTE_ADDR'], $this->inbound_ips)) {
+			throw new \Exception('Remote address (' . $_SERVER['REMOTE_ADDR'] . ') not authorised to perform this operation.');
 		}
 	}
 }

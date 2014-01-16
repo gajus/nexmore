@@ -27,27 +27,24 @@ class Messenger {
 	 * @param string $text
 	 * @param array $parameters
 	 */
-	public function sms ($to, $text, array $parameters = []) {
-		if (isset($parameters['to']) || isset($parameters['text'])) {
-			throw new \InvalidArgumentException('$parameters argument includes either of the reserved parameters (to or text).');
+	public function sms ($from, $to, $text, array $parameters = []) {
+		if (isset($parameters['from']) || isset($parameters['to']) || isset($parameters['text'])) {
+			throw new \InvalidArgumentException('$parameters argument includes either of the reserved parameters (from, to or text).');
 		}
 
-		if (isset($parameters['from'])) {
-			$this->validateSenderId($parameters['from']);
-		}
-
+		$this->validateSenderId($from);
 		$this->validateRecipientNumber($to);
 
 		if ($unknown = array_diff(array_keys($parameters), ['type', 'status-report-req', 'client-ref', 'network-code', 'vcard', 'vcal', 'ttl', 'message-class', 'body', 'udh'])) {
 			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
-		// @todo It is not clear whether the limit is referring to the number of bytes or UTF-8 encoded characters.
+		// @todo It is not clear whether the limit is referring to the number of bytes or UTF-8 encoded characters (https://docs.nexmo.com/index.php/sms-api/send-message).
 		if (strlen($text) > 3200) {
 			throw new \InvalidArgumentException('"text" message maximum length is 3200 characters.');
 		}
 
-		$response = $this->request->make('https://rest.nexmo.com/sms/json', ['to' => $to, 'text' => $text] + $parameters);
+		$response = $this->request->make('https://rest.nexmo.com/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
