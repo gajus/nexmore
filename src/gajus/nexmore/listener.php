@@ -73,7 +73,7 @@ class Listener {
 				'type' => $this->input['type'],
 				'recipient_number' => $this->input['to'],
 				'sender_id' => isset($this->input['msisdn']) ? $this->input['msisdn'] : null,
-				'network_code' => $this->input['network-code'],
+				'network_code' => isset($this->input['network-code']) ? $this->input['network-code'] : null,
 				'message_id' => $this->input['messageId'],
 				'message_timestamp' => \DateTime::createFromFormat('Y-m-d H:i:s', $this->input['message-timestamp'])->getTimestamp()
 			];

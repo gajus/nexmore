@@ -1,5 +1,5 @@
 <?php
-class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
+class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider unsafeIpProvider
 	 * @expectedException UnexpectedValueException
@@ -8,20 +8,17 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['REMOTE_ADDR'] = $ip;
 
 		$_GET = [
-			'msisdn' => '66837000111',
-			'to' => '12150000025',
-			'network-code' => '52099',
-			'messageId' => '000000FFFB0356D2',
-			'price' => '0.02000000',
-			'status' => 'delivered',
-			'scts' => '1208121359',
-			'err-code' => '0',
-			'message-timestamp' => '2012-08-12 13:59:37'
+			'msisdn' => '19150000001',
+			'to' => '12108054321',
+			'messageId' => '000000FFFB0356D1',
+			'text' => 'This is an inbound message',
+			'type' => 'text',
+			'message-timestamp' => '2012-08-19 20:38:23'
 		];
 
 		$listener = new \gajus\nexmore\Listener();
 
-		$listener->getDeliveryReceipt();
+		$listener->getInboundMessage();
 	}
 
 	/**
@@ -31,20 +28,17 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['REMOTE_ADDR'] = $ip;
 
 		$_GET = [
-			'msisdn' => '66837000111',
-			'to' => '12150000025',
-			'network-code' => '52099',
-			'messageId' => '000000FFFB0356D2',
-			'price' => '0.02000000',
-			'status' => 'delivered',
-			'scts' => '1208121359',
-			'err-code' => '0',
-			'message-timestamp' => '2012-08-12 13:59:37'
+			'msisdn' => '19150000001',
+			'to' => '12108054321',
+			'messageId' => '000000FFFB0356D1',
+			'text' => 'This is an inbound message',
+			'type' => 'text',
+			'message-timestamp' => '2012-08-19 20:38:23'
 		];
 
 		$listener = new \gajus\nexmore\Listener();
 
-		$listener->getDeliveryReceipt();
+		$listener->getInboundMessage();
 	}
 
 	/**
@@ -56,37 +50,31 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 
 		$listener = new \gajus\nexmore\Listener();
 
-		$this->assertNull($listener->getDeliveryReceipt());
+		$this->assertNull($listener->getInboundMessage());
 	}
 
 	public function testCallbackDataFormat () {
 		$input = [
-			'msisdn' => '66837000111',
-			'to' => '12150000025',
-			'network-code' => '52099',
-			'messageId' => '000000FFFB0356D2',
-			'price' => '0.02000000',
-			'status' => 'delivered',
-			'scts' => '1208121359',
-			'err-code' => '0',
-			'message-timestamp' => '2012-08-12 13:59:37'
+			'msisdn' => '19150000001',
+			'to' => '12108054321',
+			'messageId' => '000000FFFB0356D1',
+			'text' => 'This is an inbound message',
+			'type' => 'text',
+			'message-timestamp' => '2012-08-19 20:38:23'
 		];
 
 		$listener = new \gajus\nexmore\Listener($input);
 
-		$response = $listener->getDeliveryReceipt();
+		$response = $listener->getInboundMessage();
 
 		$expected_response = [
-			'sender_id' => '12150000025',
-			  'recipient_number' => '66837000111',
-			  'network_code' => '52099',
-			  'message_id' => '000000FFFB0356D2',
-			  'status' => 'delivered',
-			  'error_code' => '0',
-			  'price' => '0.02000000',
-			  'receipt_timestamp' => 1344779940,
-			  'message_timestamp' => 1344779977,
-			  'reference' => NULL,
+			'type' => 'text',
+			'recipient_number' => '12108054321',
+			'sender_id' => '19150000001',
+			'network_code' => NULL,
+			'message_id' => '000000FFFB0356D1',
+			'message_timestamp' => 1345408703,
+			'text' => 'This is an inbound message'
 		];
 
 		$this->assertSame($response, $expected_response);
