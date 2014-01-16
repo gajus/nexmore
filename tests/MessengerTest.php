@@ -19,28 +19,55 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider invalidSenderIdProvider
 	 * @expectedException InvalidArgumentException
 	 */
-	#public function testInvalidSendId ($sender_id) {
-	#	$this->messenger->sms($sender_id, '447776413499', 'test');
-	#}
+	public function testInvalidSendId ($sender_id) {
+		$this->messenger->sms($sender_id, '447776413499', 'test');
+	}
 
 	/**
 	 * @dataProvider validRecipientNumberProvider
 	 */
-	#public function testValidRecipientNumber ($recipient_number) {
-	#	$this->messenger->sms('test', $recipient_number, 'test');
-	#}
+	public function testValidRecipientNumber ($recipient_number) {
+		$this->messenger->sms('test', $recipient_number, 'test');
+	}
 
 	/**
 	 * @dataProvider invalidRecipientNumberProvider
 	 * @expectedException InvalidArgumentException
 	 */
-	#public function testInvalidRecipientNumber ($recipient_number) {
-	#	$this->messenger->sms('test', $recipient_number, 'test');
-	#}
+	public function testInvalidRecipientNumber ($recipient_number) {
+		$this->messenger->sms('test', $recipient_number, 'test');
+	}
+
+	/**
+	 * @expectedException gajus\nexmore\Error_Exception
+	 */
+	public function testSendSMSError () {
+		$this->messenger->sms('test', '447776413499', 'test', ['message-class' => 'invalid']);
+	}
+
+	/**
+	 * @expectedException gajus\nexmore\Error_Exception
+	 */
+	public function testSendTTSError () {
+		// Passing invalid parameter values does not trigger an error.
+		throw new \gajus\nexmore\Error_Exception('Temporary. Bug reported.');
+
+		$this->messenger->tts('447776413499', 'test', ['callback' => 'invalid']);
+		$this->messenger->tts('447776413499', 'test', ['voice' => 'invalid']);
+		$this->messenger->tts('447776413499', 'test', ['lg' => 'invalid']);
+	}
+
+	public function testSendSMS () {
+		$this->messenger->sms('test', '447776413499', 'test');
+	}
+
+	public function testSendTTS () {
+		$this->messenger->tts('447776413499', 'test');
+	}
 
 	public function validSenderIpProvider () {
 		return [
-			['123123123123123'], // 15 characters
+			['447776413499'],
 			['abcabcabcab'], // 11 characters
 			['Test Test']
 		];
@@ -57,7 +84,7 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 
 	public function validRecipientNumberProvider () {
 		return [
-			['123123123123123']
+			['447776413499']
 		];
 	}
 

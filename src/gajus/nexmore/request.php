@@ -38,13 +38,19 @@ class Request {
 		$response = curl_exec($ch);
 		
 		if (curl_errno($ch)) {
-			throw new \ErrorException(curl_error($ch));
+			throw new \gajus\nexmore\Error_Exception(curl_error($ch));
 		}
 		
 		curl_close($ch);
 
-		#var_dump(PHP_EOL, $response, PHP_EOL);
+		$response = json_decode($response, true);
 		
-		return json_decode($response, true);
+		#var_dump(PHP_EOL, ['url' => $url, 'parameters' => $parameters, 'response' => $response], PHP_EOL);
+
+		if (!is_array($response)) {
+			throw new \gajus\nexmore\Error_Exception('Invalid response.');
+		}
+
+		return $response;
 	}
 }

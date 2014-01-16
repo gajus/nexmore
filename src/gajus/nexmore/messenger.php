@@ -80,7 +80,7 @@ class Messenger {
 			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
-		$response =  $this->sendRequest($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
+		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
 			throw new \gajus\nexmore\Error_Exception($response['error-text'], $response['status']);
