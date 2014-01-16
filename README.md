@@ -21,14 +21,14 @@ $messenger->sms(string $from, string $to, string $text[, array $parameters]);
 
 `sms` method will throw an `InvalidArgumentException` if either of the parameters is unknonw, missing or do not conform to the format requirements.
 
-If at least one message is not delivered `\gajus\nexmore\Error` exception will be thrown.
+If at least one message is not delivered `\gajus\nexmore\Error_Exception` exception will be thrown.
 
 ```php
 try {
 	$messenger->sms('Gajus', '447776413499', 'test');
 } catch (\InvalidArgumentException $e) {
 	// [..]
-} catch (\gajus\nexmore\Error $e) {
+} catch (\gajus\nexmore\Error_Exception $e) {
 	// [..]
 } catch (\RuntimeException $e) {
 	// [..]
