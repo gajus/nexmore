@@ -1,29 +1,20 @@
 <?php
 namespace gajus\nexmore;
 
-class Dispatcher {
+class Messenger {
 
 	private
 		/**
-		 * @param string
+		 * @param Request
 		 */
-		$key,
-		/**
-		 * @param string
-		 */
-		$secret;
+		$request;
 
 	/**
-	 * Listens to Nexmo Delivery Receipt. All knonw receipt $_GET parameters are mapped to
-	 * a $receipt property. Parameter names are canonicalized.
-	 *
 	 * @param string $key
 	 * @param string $secret
-	 * @param boolean $debug Debug allows indbound traffic to come from outside of the safe subnet.
 	 */
-	public function __construct ($key, $secret, $debug = false) {
-		$this->key = $key;
-		$this->secret = $secret;
+	public function __construct ($key, $secret) {
+		$this->request = new \gajus\nexmore\Request($key, $secret);
 	}
 
 	/**
@@ -36,16 +27,19 @@ class Dispatcher {
 	 * @param string $text
 	 * @param array $parameters
 	 */
-	public function sms ($from, $to, $text, array $parameters = []) {
-		if (isset($parameters['from']) || isset($parameters['to']) || isset($parameters['text'])) {
-			throw new \InvalidArgumentException('$parameters argument includes either of the reserved parameters (from, to or text).');
+	public function sms ($to, $text, array $parameters = []) {
+		if (isset($parameters['to']) || isset($parameters['text'])) {
+			throw new \InvalidArgumentException('$parameters argument includes either of the reserved parameters (to or text).');
 		}
 
-		$this->validateSenderId($from);
+		if (isset($parameters['from'])) {
+			$this->validateSenderId($parameters['from']);
+		}
+
 		$this->validateRecipientNumber($to);
 
 		if ($unknown = array_diff(array_keys($parameters), ['type', 'status-report-req', 'client-ref', 'network-code', 'vcard', 'vcal', 'ttl', 'message-class', 'body', 'udh'])) {
-			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknonw) . '.');
+			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
 		// @todo It is not clear whether the limit is referring to the number of bytes or UTF-8 encoded characters.
@@ -53,7 +47,15 @@ class Dispatcher {
 			throw new \InvalidArgumentException('"text" message maximum length is 3200 characters.');
 		}
 
-		return $this->sendRequest('https://rest.nexmo.com/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
+		$response = $this->request->make('https://rest.nexmo.com/sms/json', ['to' => $to, 'text' => $text] + $parameters);
+
+		foreach ($response['messages'] as $m) {
+			if ($m['status'] !== '0') {
+				throw new \gajus\nexmore\Error($m['error-text'], $m['status']);
+			}
+		}
+
+		return $response;
 	}
 
 	/**
@@ -70,7 +72,7 @@ class Dispatcher {
 		$this->validateRecipientNumber($to);
 
 		if ($unknown = array_diff(array_keys($parameters), ['lg', 'voice', 'repeat', 'drop_if_machine', 'callback', 'callback_method'])) {
-			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknonw) . '.');
+			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
 		// Should leave the validation for the API.
@@ -88,7 +90,7 @@ class Dispatcher {
 			throw new \InvalidArgumentException('Sender ID is not a string.');
 		}
 
-		if (preg_replace('/[^a-z0-9]/i', '', $address) !== $address) {
+		if (preg_replace('/[^a-z0-9]/i', '', $sender_id) !== $sender_id) {
 			throw new \InvalidArgumentException('Sender ID contains unsupported characters.');
 		}
 
@@ -122,7 +124,7 @@ class Dispatcher {
 			throw new \InvalidArgumentException('Recipient number contains unsupported characters.');
 		}
 
-		if (strlen($originator) > 15) {
+		if (strlen($recipient_number) > 15) {
 			throw new \InvalidArgumentException('Recipient number length is more than 15 characters.');
 		}
 	}

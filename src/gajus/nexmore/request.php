@@ -1,9 +1,16 @@
 <?php
 namespace gajus\nexmore;
 
-abstract class Request {
+class Request {
+
 	private
+		/**
+		 * @param string
+		 */
 		$key,
+		/**
+		 * @param string
+		 */
 		$secret;
 	
 	public function __construct ($key, $secret) {
@@ -11,7 +18,7 @@ abstract class Request {
 		$this->secret = $secret;
 	}
 
-	private function sendRequest ($url, array $parameters) {
+	public function make ($url, array $parameters) {
 		$ch = curl_init();
 		
 		$parameters = ['api_key' => $this->key, 'api_secret' => $this->secret] + $parameters;

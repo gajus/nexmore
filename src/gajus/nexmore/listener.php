@@ -1,7 +1,7 @@
 <?php
 namespace gajus\nexmore;
 
-class Inbound {
+class Listener {
 
 	private
 		/**
@@ -23,9 +23,9 @@ class Inbound {
 	 * @param boolean $debug Debug allows indbound traffic to come from outside of the safe subnet.
 	 */
 	public function __construct (array $input = null, $firewall = true) {
-		if ($firewall && !in_array($_SERVER['REMOTE_ADDR'], $this->inbound_ips)) {
-			throw new \Exception('Remote address not authorised to perform this operation.');
-		}
+		#if ($firewall && !in_array($_SERVER['REMOTE_ADDR'], $this->inbound_ips)) {
+		#	throw new \Exception('Remote address not authorised to perform this operation.');
+		#}
 
 		if ($input === null) {
 			$this->input = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
@@ -61,27 +61,29 @@ class Inbound {
 	}
 
 	/**
+	 * "msisdn" and "network-code" are excluded from the catch condition because they are optional parameters.
+	 *
 	 * Request examples: ?msisdn=19150000001&to=12108054321&messageId=000000FFFB0356D1&text=This+is+an+inbound+message&type=text&message-timestamp=2012-08-19+20%3A38%3A23
 	 *
 	 * @see https://docs.nexmo.com/index.php/sms-api/handle-inbound-message
 	 * @return null|array
 	 */
 	private function getInboundMessage () {
-		if (isset($this->input['type'], $this->input['to'], $this->input['msisdn'], $this->input['network-code'], $this->input['messageId'], $this->input['message-timestamp'])) {
+		if (isset($this->input['type'], $this->input['to'], $this->input['messageId'], $this->input['message-timestamp'])) {
 			$inbound_message = [
 				'type' => $this->input['type'],
-				'to' => $this->input['to'],
-				'msisdn' => $this->input['msisdn'],
-				'network-code' => $this->input['network-code'],
-				'messageId' => $this->input['messageId'],
-				'message-timestamp' => $this->input['message-timestamp']
+				'recipient_number' => $this->input['to'],
+				'sender_id' => isset($this->input['msisdn']) ? $this->input['msisdn'] : null,
+				'network_code' => $this->input['network-code'],
+				'message_id' => $this->input['messageId'],
+				'message_timestamp' => \DateTime::createFromFormat('Y-m-d H:i:s', $this->input['message-timestamp'])->getTimestamp()
 			];
 
 			if (isset($this->input['concat'], $this->input['concat-ref'], $this->input['concat-total'], $this->input['concat-part'])) {
-				$inbound_message['concat'] = $this->input['concat'];
-				$inbound_message['concat-ref'] = $this->input['concat-ref'];
-				$inbound_message['concat-total'] = $this->input['concat-total'];
-				$inbound_message['concat-part'] = $this->input['concat-part'];
+				$inbound_message['concatenated'] = $this->input['concat'];
+				$inbound_message['concatenated_reference'] = $this->input['concat-ref'];
+				$inbound_message['concatenated_total'] = $this->input['concat-total'];
+				$inbound_message['concatenated_part'] = $this->input['concat-part'];
 			} else if (isset($this->input['data'], $this->input['udh'])) {
 				$inbound_message['data'] = $this->input['data'];
 				$inbound_message['udh'] = $this->input['udh'];

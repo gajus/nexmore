@@ -3,6 +3,8 @@ set_include_path(__DIR__ . '/../src');
 
 spl_autoload_register();
 
-$carrier = new \gajus\nexmore\Dispatcher('cc9d2471', '69c35f29');
+$messenger = new \gajus\nexmore\Messenger('cc9d2471', '69c35f29');
 
-var_dump( $carrier->getReceipt(), $carrier );
+var_dump( $messenger->sms('447776413499', 'test', ['nrseint' => 'rsteits', 'from' => 'Gajus']) );
+
+#var_dump( $carrier->getReceipt(), $carrier );
