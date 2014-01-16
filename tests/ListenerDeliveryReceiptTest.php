@@ -1,5 +1,5 @@
 <?php
-class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
+class ListenerDeliveryReceiptTest extends ListenerTest {
 	/**
 	 * @dataProvider unsafeIpProvider
 	 * @expectedException UnexpectedValueException
