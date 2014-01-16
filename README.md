@@ -1,5 +1,8 @@
 # Nexmore
 
+[![Build Status](https://travis-ci.org/gajus/nexmore.png?branch=master)](https://travis-ci.org/gajus/nexmore)
+[![Coverage Status](https://coveralls.io/repos/gajus/nexmore/badge.png)](https://coveralls.io/r/gajus/nexmore)
+
 Nexmo offers high volume SMS and Voice APIs via REST and SMPP. Nexmore is [Nexmo RESTful API](https://docs.nexmo.com/) wrapper.
 
 ## Documentation
