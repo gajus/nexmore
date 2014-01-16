@@ -5,6 +5,12 @@ class Messenger {
 
 	private
 		/**
+		 * This value needs changing only for testing.
+		 *
+		 * @param string
+		 */
+		$api_url,
+		/**
 		 * @param Request
 		 */
 		$request;
@@ -12,8 +18,10 @@ class Messenger {
 	/**
 	 * @param string $key
 	 * @param string $secret
+	 * @param string $api_url
 	 */
-	public function __construct ($key, $secret) {
+	public function __construct ($key, $secret, $api_url = 'https://rest.nexmo.com') {
+		$this->api_url = $api_url;
 		$this->request = new \gajus\nexmore\Request($key, $secret);
 	}
 
@@ -44,11 +52,11 @@ class Messenger {
 			throw new \InvalidArgumentException('"text" message maximum length is 3200 characters.');
 		}
 
-		$response = $this->request->make('https://rest.nexmo.com/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
+		$response = $this->request->make($this->api_url . '/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
-				throw new \gajus\nexmore\ErrorException($m['error-text'], $m['status']);
+				throw new \gajus\nexmore\Error_Exception($m['error-text'], $m['status']);
 			}
 		}
 
@@ -72,13 +80,10 @@ class Messenger {
 			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
-		// Should leave the validation for the API.
-		// if (isset($parameters['lg']) && !in_array($parameters['lg'], ['de-de']))
-
-		$response =  $this->sendRequest('https://rest.nexmo.com/tts/json', ['to' => $to, 'text' => $text] + $parameters);
+		$response =  $this->sendRequest($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
-			throw new \gajus\nexmore\ErrorException($response['error-text'], $response['status']);
+			throw new \gajus\nexmore\Error_Exception($response['error-text'], $response['status']);
 		}
 
 		return $response;
@@ -93,7 +98,7 @@ class Messenger {
 			throw new \InvalidArgumentException('Sender ID is not a string.');
 		}
 
-		if (preg_replace('/[^a-z0-9]/i', '', $sender_id) !== $sender_id) {
+		if (preg_replace('/[^a-z0-9 ]/i', '', $sender_id) !== $sender_id) {
 			throw new \InvalidArgumentException('Sender ID contains unsupported characters.');
 		}
 

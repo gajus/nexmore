@@ -24,7 +24,7 @@ class Request {
 		$parameters = ['api_key' => $this->key, 'api_secret' => $this->secret] + $parameters;
 
 		curl_setopt_array($ch, [
-			CURLOPT_URL => 'https://rest.nexmo.com/sms/json',
+			CURLOPT_URL => $url,
 			CURLOPT_TIMEOUT => 5,
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_SSL_VERIFYHOST => 2,
@@ -42,6 +42,8 @@ class Request {
 		}
 		
 		curl_close($ch);
+
+		#var_dump(PHP_EOL, $response, PHP_EOL);
 		
 		return json_decode($response, true);
 	}
