@@ -53,31 +53,68 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($listener->getInboundMessage());
 	}
 
-	public function testCallbackDataFormat () {
-		$input = [
-			'msisdn' => '19150000001',
-			'to' => '12108054321',
-			'messageId' => '000000FFFB0356D1',
-			'text' => 'This is an inbound message',
-			'type' => 'text',
-			'message-timestamp' => '2012-08-19 20:38:23'
-		];
-
+	/**
+	 * @dataProvider validCallbackProvider
+	 */
+	public function testValidCallback ($input, $expected_response) {
 		$listener = new \gajus\nexmore\Listener($input);
 
 		$response = $listener->getInboundMessage();
 
-		$expected_response = [
-			'type' => 'text',
-			'recipient_number' => '12108054321',
-			'sender_id' => '19150000001',
-			'network_code' => NULL,
-			'message_id' => '000000FFFB0356D1',
-			'message_timestamp' => 1345408703,
-			'text' => 'This is an inbound message'
-		];
-
 		$this->assertSame($response, $expected_response);
+	}
+
+	public function validCallbackProvider () {
+		return [
+			[
+				// Specific Parameters for Text Inbound
+				[
+					'msisdn' => '19150000001',
+					'to' => '12108054321',
+					'messageId' => '000000FFFB0356D1',
+					'text' => 'This is an inbound message',
+					'type' => 'text',
+					'message-timestamp' => '2012-08-19 20:38:23'
+				],
+				[
+					'type' => 'text',
+					'recipient_number' => '12108054321',
+					'sender_id' => '19150000001',
+					'network_code' => NULL,
+					'message_id' => '000000FFFB0356D1',
+					'message_timestamp' => 1345408703,
+					'text' => 'This is an inbound message'
+				]
+			],
+			[
+				// Specific Parameters for long 'concatenated' Inbound
+				[
+					'msisdn' => '19150000001',
+					'to' => '12108054321',
+					'messageId' => '000000FFFB0356D1',
+					'concat' => 'true',
+					'concat-ref' => 'test01',
+					'concat-total' => '2',
+					'concat-part' => '1',
+					'text' => 'This is an inbound message',
+					'type' => 'text',
+					'message-timestamp' => '2012-08-19 20:38:23'
+				],
+				[
+					'type' => 'text',
+					'recipient_number' => '12108054321',
+					'sender_id' => '19150000001',
+					'network_code' => NULL,
+					'message_id' => '000000FFFB0356D1',
+					'message_timestamp' => 1345408703,
+					'text' => 'This is an inbound message',
+					'concatenated' => 'true',
+					'concatenated_reference' => 'test01',
+					'concatenated_total' => '2',
+					'concatenated_part' => '1'
+				]
+			]
+		];
 	}
 
 	public function unsafeIpProvider () {

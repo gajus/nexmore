@@ -78,18 +78,18 @@ class Listener {
 				'message_timestamp' => \DateTime::createFromFormat('Y-m-d H:i:s', $this->input['message-timestamp'])->getTimestamp()
 			];
 
+			if (isset($this->input['text'])) {
+				$inbound_message['text'] = $this->input['text'];
+			} else if (isset($this->input['data'], $this->input['udh'])) {
+				$inbound_message['data'] = $this->input['data'];
+				$inbound_message['udh'] = $this->input['udh'];
+			}
+
 			if (isset($this->input['concat'], $this->input['concat-ref'], $this->input['concat-total'], $this->input['concat-part'])) {
 				$inbound_message['concatenated'] = $this->input['concat'];
 				$inbound_message['concatenated_reference'] = $this->input['concat-ref'];
 				$inbound_message['concatenated_total'] = $this->input['concat-total'];
 				$inbound_message['concatenated_part'] = $this->input['concat-part'];
-			} else if (isset($this->input['data'], $this->input['udh'])) {
-				$inbound_message['data'] = $this->input['data'];
-				$inbound_message['udh'] = $this->input['udh'];
-			} else if (isset($this->input['text'])) {
-				$inbound_message['text'] = $this->input['text'];
-			} else {
-				throw new \UnexpectedValueException('Invalid callback.');
 			}
 
 			return $inbound_message;
