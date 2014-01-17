@@ -80,6 +80,11 @@ class Messenger {
 			throw new \InvalidArgumentException('Unknown/unsupported parameter(s): ' . implode(', ', $unknown) . '.');
 		}
 
+		// @todo It is not clear whether the limit is referring to the number of bytes or UTF-8 encoded characters (https://docs.nexmo.com/index.php/sms-api/send-message).
+		if (strlen($text) > 1000) {
+			throw new \InvalidArgumentException('"text" message maximum length is 1000 characters.');
+		}
+
 		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {

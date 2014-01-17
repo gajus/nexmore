@@ -65,6 +65,86 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		$this->messenger->tts('447776413499', 'test');
 	}
 
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testTooLongTextSMS () {
+		$this->messenger->sms('test', '447776413499', str_repeat('a', 3201));
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testTooLongTextTTS () {
+		$this->messenger->tts('447776413499', str_repeat('a', 1001));
+	}
+
+	/**
+	 * @dataProvider reservedSMSParametersProvider
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testReservedSMSParameters ($parameter) {
+		$parameters = [];
+		$parameters[$parameter] = 'test';
+
+		$this->messenger->sms('test', '447776413499', 'test', $parameters);
+	}
+
+	public function reservedSMSParametersProvider () {
+		return [
+			['from'],
+			['to'],
+			['text']
+		];
+	}
+
+	/**
+	 * @dataProvider reservedTTSParametersProvider
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testReservedTTSParameters ($parameter) {
+		$parameters = [];
+		$parameters[$parameter] = 'test';
+
+		$this->messenger->sms('447776413499', 'test', $parameters);
+	}
+
+	public function reservedTTSParametersProvider () {
+		return [
+			['to'],
+			['text']
+		];
+	}
+
+	/**
+	 * @dataProvider invalidParametersProvider
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testInvalidSMSParameters ($parameter) {
+		$parameters = [];
+		$parameters[$parameter] = 'test';
+
+		$this->messenger->sms('test', '447776413499', 'test', $parameters);
+	}
+
+	/**
+	 * @dataProvider invalidParametersProvider
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testInvalidTTSParameters ($parameter) {
+		$parameters = [];
+		$parameters[$parameter] = 'test';
+
+		$this->messenger->sms('447776413499', 'test', $parameters);
+	}
+
+	public function invalidParametersProvider () {
+		return [
+			['foo'],
+			['bar']
+		];
+	}
+
 	public function validSenderIpProvider () {
 		return [
 			['447776413499'],
