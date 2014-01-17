@@ -76,7 +76,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 
 		$response = $listener->getDeliveryReceipt();
 
-		$expected_response = [
+		$expected = [
 			'sender_id' => '12150000025',
 			  'recipient_number' => '66837000111',
 			  'network_code' => '52099',
@@ -89,7 +89,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 			  'reference' => NULL,
 		];
 
-		$this->assertSame($response, $expected_response);
+		$this->assertSame($expected, $response);
 	}
 
 	public function unsafeIpProvider () {

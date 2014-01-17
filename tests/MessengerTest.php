@@ -9,6 +9,7 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Consider using https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
 	 * @dataProvider validSenderIpProvider
 	 */
 	public function testValidSenderId ($sender_id) {

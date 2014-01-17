@@ -12,7 +12,7 @@
          bootstrap="tests/bootstrap.php"
 >
     <testsuites>
-        <testsuite name="Example Test Suite">
+        <testsuite>
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>

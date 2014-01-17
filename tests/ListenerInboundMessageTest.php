@@ -56,12 +56,12 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider validCallbackProvider
 	 */
-	public function testValidCallback ($input, $expected_response) {
+	public function testValidCallback ($input, $expected) {
 		$listener = new \gajus\nexmore\Listener($input);
 
 		$response = $listener->getInboundMessage();
 
-		$this->assertSame($response, $expected_response);
+		$this->assertSame($expected, $response);
 	}
 
 	public function validCallbackProvider () {
