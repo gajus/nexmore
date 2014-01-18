@@ -121,6 +121,10 @@ array(7) {
 }
 ```
 
+## To do
+
+* Either to allow direct API calls or create interface for Account features.
+
 ## Alternatives
 
 If you don't like Nexmore implementation, please [raise an issue](https://github.com/gajus/Nexmore/issues).
