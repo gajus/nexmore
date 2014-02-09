@@ -56,7 +56,7 @@ class Messenger {
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
-				throw new \gajus\nexmore\Error_Exception($m['error-text'], $m['status']);
+				throw new \gajus\nexmore\exception\Error_Exception($m['error-text'], $m['status']);
 			}
 		}
 
@@ -88,7 +88,7 @@ class Messenger {
 		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
-			throw new \gajus\nexmore\Error_Exception($response['error-text'], $response['status']);
+			throw new \gajus\nexmore\exception\Error_Exception($response['error-text'], $response['status']);
 		}
 
 		return $response;

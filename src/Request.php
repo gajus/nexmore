@@ -48,7 +48,7 @@ class Request {
 		#var_dump(PHP_EOL, ['url' => $url, 'parameters' => $parameters, 'response' => $response], PHP_EOL);
 
 		if (!is_array($response)) {
-			throw new \gajus\nexmore\Error_Exception('Invalid response.');
+			throw new \gajus\nexmore\exception\Error_Exception('Invalid response.');
 		}
 
 		return $response;

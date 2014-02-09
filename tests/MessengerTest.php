@@ -40,14 +40,14 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException gajus\nexmore\Error_Exception
+	 * @expectedException gajus\nexmore\exception\Error_Exception
 	 */
 	public function testSendSMSError () {
 		$this->messenger->sms('test', '447776413499', 'test', ['message-class' => 'invalid']);
 	}
 
 	/**
-	 * @expectedException gajus\nexmore\Error_Exception
+	 * @expectedException gajus\nexmore\exception\Error_Exception
 	 */
 	public function testSendTTSError () {
 		// Passing invalid parameter values does not trigger an error.

@@ -1,4 +1,4 @@
 <?php
-namespace gajus\nexmore;
+namespace gajus\nexmore\exception;
 
 class Error_Exception extends \RuntimeException {}
