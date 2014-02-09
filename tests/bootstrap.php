@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../src/gajus/nexmore/Listener.php';
-require __DIR__ . '/../src/gajus/nexmore/Messenger.php';
-require __DIR__ . '/../src/gajus/nexmore/Request.php';
-require __DIR__ . '/../src/gajus/nexmore/exception/Error_Exception.php';
+require __DIR__ . '/../src/Listener.php';
+require __DIR__ . '/../src/Messenger.php';
+require __DIR__ . '/../src/Request.php';
+require __DIR__ . '/../src/Exception/ErrorException.php';

@@ -1,6 +1,10 @@
 <?php
 namespace gajus\nexmore;
 
+/**
+ * @link https://github.com/gajus/nexmore for the canonical source repository
+ * @license https://github.com/gajus/nexmore/blob/master/LICENSE BSD 3-Clause
+ */
 class Request {
 
 	private
@@ -38,17 +42,15 @@ class Request {
 		$response = curl_exec($ch);
 		
 		if (curl_errno($ch)) {
-			throw new \gajus\nexmore\Error_Exception(curl_error($ch));
+			throw new \Gajus\Nexmore\Exception\ErrorException(curl_error($ch));
 		}
 		
 		curl_close($ch);
 
 		$response = json_decode($response, true);
 		
-		#var_dump(PHP_EOL, ['url' => $url, 'parameters' => $parameters, 'response' => $response], PHP_EOL);
-
 		if (!is_array($response)) {
-			throw new \gajus\nexmore\exception\Error_Exception('Invalid response.');
+			throw new \Gajus\Nexmore\Exception\ErrorException('Invalid response.');
 		}
 
 		return $response;

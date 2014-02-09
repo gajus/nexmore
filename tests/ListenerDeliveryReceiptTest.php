@@ -19,7 +19,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 			'message-timestamp' => '2012-08-12 13:59:37'
 		];
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$listener->getDeliveryReceipt();
 	}
@@ -42,7 +42,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 			'message-timestamp' => '2012-08-12 13:59:37'
 		];
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$listener->getDeliveryReceipt();
 	}
@@ -54,7 +54,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 	public function testEmptyCallback ($ip) {
 		$_SERVER['REMOTE_ADDR'] = $ip;
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$this->assertNull($listener->getDeliveryReceipt());
 	}
@@ -72,7 +72,7 @@ class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 			'message-timestamp' => '2012-08-12 13:59:37'
 		];
 
-		$listener = new \gajus\nexmore\Listener($input);
+		$listener = new \Gajus\Nexmore\Listener($input);
 
 		$response = $listener->getDeliveryReceipt();
 

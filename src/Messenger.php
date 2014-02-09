@@ -1,6 +1,10 @@
 <?php
-namespace gajus\nexmore;
+namespace Gajus\Nexmore;
 
+/**
+ * @link https://github.com/gajus/nexmore for the canonical source repository
+ * @license https://github.com/gajus/nexmore/blob/master/LICENSE BSD 3-Clause
+ */
 class Messenger {
 
 	private
@@ -56,7 +60,7 @@ class Messenger {
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
-				throw new \gajus\nexmore\exception\Error_Exception($m['error-text'], $m['status']);
+				throw new \Gajus\Nexmore\Exception\ErrorException($m['error-text'], $m['status']);
 			}
 		}
 
@@ -88,7 +92,7 @@ class Messenger {
 		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
-			throw new \gajus\nexmore\exception\Error_Exception($response['error-text'], $response['status']);
+			throw new \Gajus\Nexmore\Exception\ErrorException($response['error-text'], $response['status']);
 		}
 
 		return $response;

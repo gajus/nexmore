@@ -5,7 +5,7 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		$messenger;
 
 	public function setUp () {
-		$this->messenger = new \gajus\nexmore\Messenger('dummy', 'dummy', 'https://dev.anuary.com/21704afc-2677-582c-966b-26c5f933e510/tests/callback/?path=');
+		$this->messenger = new \Gajus\Nexmore\Messenger('dummy', 'dummy', 'https://dev.anuary.com/21704afc-2677-582c-966b-26c5f933e510/tests/callback/?path=');
 	}
 
 	/**
@@ -40,18 +40,18 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException gajus\nexmore\exception\Error_Exception
+	 * @expectedException Gajus\Nexmore\Exception\ErrorException
 	 */
 	public function testSendSMSError () {
 		$this->messenger->sms('test', '447776413499', 'test', ['message-class' => 'invalid']);
 	}
 
 	/**
-	 * @expectedException gajus\nexmore\exception\Error_Exception
+	 * @expectedException Gajus\Nexmore\Exception\ErrorException
 	 */
 	public function testSendTTSError () {
 		// Passing invalid parameter values does not trigger an error.
-		throw new \gajus\nexmore\Error_Exception('Temporary. Bug reported.');
+		throw new \gajus\nexmore\Exception\ErrorException('Temporary. Bug reported.');
 
 		$this->messenger->tts('447776413499', 'test', ['callback' => 'invalid']);
 		$this->messenger->tts('447776413499', 'test', ['voice' => 'invalid']);

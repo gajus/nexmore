@@ -1,6 +1,10 @@
 <?php
-namespace gajus\nexmore;
+namespace Gajus\Nexmore;
 
+/**
+ * @link https://github.com/gajus/nexmore for the canonical source repository
+ * @license https://github.com/gajus/nexmore/blob/master/LICENSE BSD 3-Clause
+ */
 class Listener {
 
 	private

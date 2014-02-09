@@ -16,7 +16,7 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 			'message-timestamp' => '2012-08-19 20:38:23'
 		];
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$listener->getInboundMessage();
 	}
@@ -36,7 +36,7 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 			'message-timestamp' => '2012-08-19 20:38:23'
 		];
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$listener->getInboundMessage();
 	}
@@ -48,7 +48,7 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 	public function testEmptyCallback ($ip) {
 		$_SERVER['REMOTE_ADDR'] = $ip;
 
-		$listener = new \gajus\nexmore\Listener();
+		$listener = new \Gajus\Nexmore\Listener();
 
 		$this->assertNull($listener->getInboundMessage());
 	}
@@ -57,7 +57,7 @@ class ListenerInboundMessageTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider validCallbackProvider
 	 */
 	public function testValidCallback ($input, $expected) {
-		$listener = new \gajus\nexmore\Listener($input);
+		$listener = new \Gajus\Nexmore\Listener($input);
 
 		$response = $listener->getInboundMessage();
 
