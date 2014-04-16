@@ -26,7 +26,7 @@ class Messenger {
 	 */
 	public function __construct ($key, $secret, $api_url = 'https://rest.nexmo.com') {
 		$this->api_url = $api_url;
-		$this->request = new \gajus\nexmore\Request($key, $secret);
+		$this->request = new \Gajus\Nexmore\Request($key, $secret);
 	}
 
 	/**
