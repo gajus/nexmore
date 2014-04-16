@@ -111,7 +111,7 @@ class Listener {
 		$nexmo_server_ips = ['174.36.197.193', '174.36.197.194', '174.36.197.195', '174.36.197.196', '174.36.197.197', '174.36.197.198', '174.36.197.199', '174.36.197.200', '174.36.197.201', '174.36.197.202', '174.36.197.203', '174.36.197.204', '174.36.197.205', '174.36.197.206', '119.81.44.1', '119.81.44.2', '119.81.44.3', '119.81.44.4', '119.81.44.5', '119.81.44.6', '119.81.44.7', '119.81.44.8', '119.81.44.9', '119.81.44.10', '119.81.44.11', '119.81.44.12', '119.81.44.13', '119.81.44.14'];
 
 		if (!in_array($_SERVER['REMOTE_ADDR'], $nexmo_server_ips)) {
-			throw new \UnexpectedValueException('Remote address (' . $_SERVER['REMOTE_ADDR'] . ') not authorised to perform this operation.');
+			throw new Exception\UnexpectedValueException('Remote address is not authorised to perform this operation.');
 		}
 	}
 }

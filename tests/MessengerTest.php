@@ -16,12 +16,29 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		$this->messenger->sms($sender_id, '447776413499', 'test');
 	}
 
+	public function validSenderIpProvider () {
+		return [
+			['447776413499'],
+			['abcabcabcab'], // 11 characters
+			['Test Test']
+		];
+	}
+
 	/**
 	 * @dataProvider invalidSenderIdProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
 	 */
 	public function testInvalidSendId ($sender_id) {
 		$this->messenger->sms($sender_id, '447776413499', 'test');
+	}
+
+	public function invalidSenderIdProvider () {
+		return [
+			[123], // not a string,
+			['#$'], // unsupported character
+			['123123123123123123'], // numeric longer than 15 characters
+			['abcabcabcabcabcabc'] // alphanumeric longer than 11 characters
+		];
 	}
 
 	/**
@@ -31,12 +48,28 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		$this->messenger->sms('test', $recipient_number, 'test');
 	}
 
+	public function validRecipientNumberProvider () {
+		return [
+			['447776413499']
+		];
+	}
+
 	/**
 	 * @dataProvider invalidRecipientNumberProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
 	 */
 	public function testInvalidRecipientNumber ($recipient_number) {
 		$this->messenger->sms('test', $recipient_number, 'test');
+	}
+
+	public function invalidRecipientNumberProvider () {
+		return [
+			[123], // not a string
+			['+44'], // cannot start with +
+			['00'], // cannot start with 00
+			['1a23'], // contains not numbers
+			['123123123123123123'] // longer than 15
+		];
 	}
 
 	/**
@@ -67,14 +100,16 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage "text" message maximum length is 3200 characters.
 	 */
 	public function testTooLongTextSMS () {
 		$this->messenger->sms('test', '447776413499', str_repeat('a', 3201));
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage "text" message maximum length is 1000 characters.
 	 */
 	public function testTooLongTextTTS () {
 		$this->messenger->tts('447776413499', str_repeat('a', 1001));
@@ -82,7 +117,8 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider reservedSMSParametersProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage $parameters argument includes either of the reserved parameters (from, to or text).
 	 */
 	public function testReservedSMSParameters ($parameter) {
 		$parameters = [];
@@ -101,7 +137,8 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider reservedTTSParametersProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage Recipient number contains unsupported characters.
 	 */
 	public function testReservedTTSParameters ($parameter) {
 		$parameters = [];
@@ -119,7 +156,8 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider invalidParametersProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage Unknown/unsupported parameter(s).
 	 */
 	public function testInvalidSMSParameters ($parameter) {
 		$parameters = [];
@@ -130,7 +168,8 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider invalidParametersProvider
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Nexmore\Exception\InvalidArgumentException
+	 * @expectedExceptionMessage Recipient number contains unsupported characters.
 	 */
 	public function testInvalidTTSParameters ($parameter) {
 		$parameters = [];
@@ -143,39 +182,6 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		return [
 			['foo'],
 			['bar']
-		];
-	}
-
-	public function validSenderIpProvider () {
-		return [
-			['447776413499'],
-			['abcabcabcab'], // 11 characters
-			['Test Test']
-		];
-	}
-
-	public function invalidSenderIdProvider () {
-		return [
-			[123], // not a string,
-			['#$'], // unsupported character
-			['123123123123123123'], // numeric longer than 15 characters
-			['abcabcabcabcabcabc'] // alphanumeric longer than 11 characters
-		];
-	}
-
-	public function validRecipientNumberProvider () {
-		return [
-			['447776413499']
-		];
-	}
-
-	public function invalidRecipientNumberProvider () {
-		return [
-			[123], // not a string
-			['+44'], // cannot start with +
-			['00'], // cannot start with 00
-			['1a23'], // contains not numbers
-			['123123123123123123'] // longer than 15
 		];
 	}
 }

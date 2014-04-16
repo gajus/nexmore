@@ -2,7 +2,8 @@
 class ListenerDeliveryReceiptTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider unsafeIpProvider
-	 * @expectedException UnexpectedValueException
+	 * @expectedException Gajus\Nexmore\Exception\UnexpectedValueException
+	 * @expectedExceptionMessage Remote address is not authorised to perform this operation.
 	 */
 	public function testUnsafeCallbackSource ($ip) {
 		$_SERVER['REMOTE_ADDR'] = $ip;

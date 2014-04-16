@@ -1,7 +1,7 @@
 {
 	"name": "gajus/nexmore",
-	"description": "",
-	"version": "0.0.1",
+	"description": "Nexmore is Nexmo RESTful API wrapper.",
+	"version": "0.1.0",
 	"keywords": ["sms", "nexmo"],
 	"homepage": "https://github.com/gajus/nexmore",
 	"type": "library",
@@ -13,7 +13,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.5"
+		"php": ">=5.4"
 	},
 	"require-dev": {
 	    "satooshi/php-coveralls": "dev-master"
