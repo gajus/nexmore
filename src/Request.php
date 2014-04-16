@@ -1,5 +1,5 @@
 <?php
-namespace gajus\nexmore;
+namespace Gajus\Nexmore;
 
 /**
  * @link https://github.com/gajus/nexmore for the canonical source repository
