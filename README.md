@@ -104,7 +104,7 @@ Beware that Nexmore normalises parametr names and converts whatever time input t
 
 #### Delivery Receipt
 
-```
+```php
 array(10) {
     ["sender_id"]=>
     string(11) "12150000025"
@@ -131,7 +131,7 @@ array(10) {
 
 #### Inbound message
 
-```
+```php
 array(7) {
     ["type"]=>
     string(4) "text"
