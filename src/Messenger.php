@@ -24,7 +24,7 @@ class Messenger {
 	 * @param string $secret Nexmo account secret key for signing the API requests.
 	 * @param string $api_url
 	 */
-	public function __construct ($key, $secret, $api_url = 'https://rest.nexmo.com') {
+	public function __construct ($key, $secret, $api_url = 'https://api.nexmo.com') {
 		$this->api_url = $api_url;
 		$this->request = new \Gajus\Nexmore\Request($key, $secret);
 	}
@@ -44,6 +44,8 @@ class Messenger {
 			throw new Exception\InvalidArgumentException('$parameters argument includes either of the reserved parameters (from, to or text).');
 		}
 
+		$this->api_url = 'https://rest.nexmo.com';
+
 		$this->validateSenderId($from);
 		$this->validateRecipientNumber($to);
 
@@ -60,7 +62,7 @@ class Messenger {
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
-				throw new Exception\ErrorException($m['error-text'], $m['status']);
+				throw new Exception\ErrorException($m['error_text'], $m['status']);
 			}
 		}
 
@@ -92,7 +94,7 @@ class Messenger {
 		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
-			throw new Exception\ErrorException($response['error-text'], $response['status']);
+			throw new Exception\ErrorException($response['error_text'], $response['status']);
 		}
 
 		return $response;
