@@ -44,6 +44,8 @@ class Messenger {
 			throw new Exception\InvalidArgumentException('$parameters argument includes either of the reserved parameters (from, to or text).');
 		}
 
+		$this->api_url = 'https://rest.nexmo.com';
+
 		$this->validateSenderId($from);
 		$this->validateRecipientNumber($to);
 
