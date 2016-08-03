@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19a56833-2926-4042-8901-1809ef037700" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/MessengerTest.php" afterPath="$PROJECT_DIR$/tests/MessengerTest.php" />
     </list>
     <ignored path="nexmore.iws" />
@@ -281,12 +282,12 @@
       <option name="presentableId" value="Default" />
       <updated>1470232230287</updated>
       <workItem from="1470232232282" duration="60000" />
-      <workItem from="1470233116394" duration="696000" />
+      <workItem from="1470233116394" duration="728000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="756000" />
+    <option name="totallyTimeSpent" value="788000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
