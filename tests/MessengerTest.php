@@ -5,7 +5,8 @@ class MessengerTest extends PHPUnit_Framework_TestCase {
 		$messenger;
 
 	public function setUp () {
-		$this->messenger = new \Gajus\Nexmore\Messenger('dummy', 'dummy', 'https://dev.anuary.com/21704afc-2677-582c-966b-26c5f933e510/tests/callback/?path=');
+        $api_url = 'https://dev.anuary.com/21704afc-2677-582c-966b-26c5f933e510/tests/callback/?path=';
+		$this->messenger = new \Gajus\Nexmore\Messenger('dummy', 'dummy', $api_url, $api_url);
 	}
 
 	/**

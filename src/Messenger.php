@@ -6,14 +6,19 @@ namespace Gajus\Nexmore;
  * @license https://github.com/gajus/nexmore/blob/master/LICENSE BSD 3-Clause
  */
 class Messenger {
-
 	private
 		/**
 		 * This value needs changing only for testing.
 		 *
 		 * @param string
 		 */
-		$api_url,
+		$sms_api_url,
+		/**
+		 * This value needs changing only for testing.
+		 *
+		 * @param string
+		 */
+		$tts_api_url,
 		/**
 		 * @param Request
 		 */
@@ -22,10 +27,12 @@ class Messenger {
 	/**
 	 * @param string $key Nexmo account API key.
 	 * @param string $secret Nexmo account secret key for signing the API requests.
-	 * @param string $api_url
+	 * @param string $sms_api_url
+	 * @param string $tts_api_url
 	 */
-	public function __construct ($key, $secret, $api_url = 'https://rest.nexmo.com') {
-		$this->api_url = $api_url;
+	public function __construct ($key, $secret, $sms_api_url = 'https://rest.nexmo.com', $tts_api_url = 'https://api.nexmo.com') {
+		$this->sms_api_url = $sms_api_url;
+		$this->tts_api_url = $tts_api_url;
 		$this->request = new \Gajus\Nexmore\Request($key, $secret);
 	}
 
@@ -56,7 +63,7 @@ class Messenger {
 			throw new Exception\InvalidArgumentException('"text" message maximum length is 3200 characters.');
 		}
 
-		$response = $this->request->make($this->api_url . '/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
+		$response = $this->request->make($this->sms_api_url . '/sms/json', ['from' => $from, 'to' => $to, 'text' => $text] + $parameters);
 
 		foreach ($response['messages'] as $m) {
 			if ($m['status'] !== '0') {
@@ -89,7 +96,7 @@ class Messenger {
 			throw new Exception\InvalidArgumentException('"text" message maximum length is 1000 characters.');
 		}
 
-		$response =  $this->request->make($this->api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
+		$response =  $this->request->make($this->tts_api_url . '/tts/json', ['to' => $to, 'text' => $text] + $parameters);
 
 		if ($response['status'] !== '0') {
 			throw new Exception\ErrorException($response['error-text'], $response['status']);
